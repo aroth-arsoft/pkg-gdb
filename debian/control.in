@@ -8,7 +8,7 @@ Standards-Version: 3.9.4
 Build-Depends:
 # Packaging deps
                cdbs (>= 0.4.17),
-               debhelper (>= 7.0.50),
+               debhelper (>= 9),
                lsb-release,
                bzip2,
 # Other tool deps
@@ -61,7 +61,9 @@ Description: GNU Debugger
 Package: gdb-minimal
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
+Provides: gdb
 Conflicts: gdb
+Replaces: gdb
 Description: GNU Debugger (minimal version)
  GDB is a source-level debugger, capable of breaking programs at
  any specific line, displaying variable values, and determining
