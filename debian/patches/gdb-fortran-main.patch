@@ -14,25 +14,17 @@ testcases.
 
 P.S: if there is a symbol named "MAIN__" in sources of other languages, it 
 might disturb the debugging.  But I am not sure how much it is.
-
 ---
- gdb/symtab.c                       |    8 +++++--
- gdb/testsuite/gdb.fortran/lang.exp |   40 +++++++++++++++++++++++++++++++++++++
+ gdb/symtab.c                       |  8 ++++++--
+ gdb/testsuite/gdb.fortran/lang.exp | 40 ++++++++++++++++++++++++++++++++++++++
  2 files changed, 46 insertions(+), 2 deletions(-)
+ create mode 100644 gdb/testsuite/gdb.fortran/lang.exp
 
-Index: b/gdb/symtab.c
-===================================================================
+diff --git a/gdb/symtab.c b/gdb/symtab.c
+index 66d1624..486bda6 100644
 --- a/gdb/symtab.c
 +++ b/gdb/symtab.c
-@@ -5082,6 +5082,7 @@ find_main_name (void)
- {
-   const char *new_main_name;
-   struct objfile *objfile;
-+  struct bound_minimal_symbol mainsym;
- 
-   /* First check the objfiles to see whether a debuginfo reader has
-      picked up the appropriate main name.  Historically the main name
-@@ -5144,8 +5145,13 @@ find_main_name (void)
+@@ -5144,8 +5144,13 @@ find_main_name (void)
      }
  
    /* The languages above didn't identify the name of the main procedure.
@@ -40,16 +32,17 @@ Index: b/gdb/symtab.c
 -  set_main_name ("main", language_unknown);
 +     Fallback to "MAIN__" (g77 and gfortran) if we can find it in the
 +     minimal symtab, to "main" otherwise.  */
-+  mainsym = lookup_minimal_symbol ("MAIN__", NULL, NULL);
-+  if (mainsym.minsym)
++  struct bound_minimal_symbol msym = lookup_minimal_symbol ("MAIN__", NULL, NULL);
++  if (msym.minsym)
 +    set_main_name ("MAIN__", language_fortran);
 +  else
 +    set_main_name ("main", language_unknown);
  }
  
  char *
-Index: b/gdb/testsuite/gdb.fortran/lang.exp
-===================================================================
+diff --git a/gdb/testsuite/gdb.fortran/lang.exp b/gdb/testsuite/gdb.fortran/lang.exp
+new file mode 100644
+index 0000000..a0463c7
 --- /dev/null
 +++ b/gdb/testsuite/gdb.fortran/lang.exp
 @@ -0,0 +1,40 @@
