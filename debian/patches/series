@@ -1,5 +1,3 @@
-branch-updates.diff
-
 gdb-fortran-main.patch
 linuxthreads_signal_handling.patch
 solve_PATH_MAX_issue.patch
@@ -12,4 +10,3 @@ gdb-strings.patch
 ptrace-error-verbosity.patch
 #elf-auxv-diff
 libcc1-name.diff
-gcc-triplet.diff
